@@ -1,8 +1,8 @@
 package ru.gb.java2;
 
-public class MyArraySizeExсeption extends RuntimeException {
+public class MyArraySizeException extends RuntimeException {
 
-    public MyArraySizeExсeption() {
+    public MyArraySizeException() {
         super("Текущий размер массива не совпадает с заданным!");
     }
 
