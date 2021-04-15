@@ -25,7 +25,7 @@ public class Main {
         //я закомментил
         try {
             sum = sumStringArray(numbers);
-        } catch (MyArraySizeExсeption e) {
+        } catch (MyArraySizeException e) {
             System.out.println("Обрабатываем MyArraySizeExсeption...");
             System.out.println("Размер массива не совпадет в заданным в задании!");
             //Вот тут можно сделать вместо exit(1)
@@ -45,11 +45,13 @@ public class Main {
     public static int sumStringArray(String [][] numbers) {
         if (numbers.length == 4) {
             for (int i = 0; i < numbers.length; i++) {
-                if (numbers[i].length != 4)
-                    throw new MyArraySizeExсeption();
+                if (numbers[i].length != 4) {
+                    throw new MyArraySizeException();
+
+                }
             }
         } else {
-                throw new MyArraySizeExсeption();
+                throw new MyArraySizeException();
         }
         int sum = 0;
         for (int i = 0; i < numbers.length; i++) {
