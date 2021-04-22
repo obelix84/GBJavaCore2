@@ -41,7 +41,7 @@ public class Controller {
         String message = messageField.getText();
         //по идее кнопка не должна работать при пустом сообщении
         //но оставим на всякий
-        if (message != "") {
+        if (!message.equals("")) {
             chatText.appendText("Я: " + message + "\n");
         }
         messageField.clear();
