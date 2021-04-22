@@ -22,7 +22,7 @@ public class Controller {
 
     public void messageKeyReleased(KeyEvent KeyEvent) {
         String message = messageField.getText();
-        if (message != "") {
+        if (!message.equals("")) {
             btnSend.setDisable(false);
         } else {
             btnSend.setDisable(true);
@@ -31,7 +31,7 @@ public class Controller {
 
     public void messageEnterTap(ActionEvent actionEvent) {
         String message = messageField.getText();
-        if (message != "") {
+        if (!message.equals("")) {
             chatText.appendText("Я: " + message + "\n");
         }
         messageField.clear();
