@@ -37,7 +37,7 @@ public class Controller {
         messageField.clear();
     }
 
-    public void btnSendMouseClick(MouseEvent mouseEvent) {
+    public void btnSendClick(ActionEvent actionEvent) {
         String message = messageField.getText();
         //по идее кнопка не должна работать при пустом сообщении
         //но оставим на всякий

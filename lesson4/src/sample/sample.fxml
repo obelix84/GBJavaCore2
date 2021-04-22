@@ -9,7 +9,7 @@
    <Label alignment="CENTER" text="Write a message" />
     <HBox maxHeight="50" minHeight="-Infinity">
         <TextField fx:id="messageField" onAction="#messageEnterTap" onKeyReleased="#messageKeyReleased" promptText="Message..." HBox.hgrow="ALWAYS" />
-        <Button fx:id="btnSend" disable="true" minHeight="20" minWidth="-Infinity" onMouseClicked="#btnSendMouseClick" prefWidth="50" text="Send" />
+        <Button fx:id="btnSend" disable="true" minHeight="20" minWidth="-Infinity" onAction="#btnSendClick" prefWidth="50" text="Send" />
     </HBox>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
