@@ -30,7 +30,7 @@ public class ServerApplication {
                     }
                 }
             });
-            //вот тут будем писать сообщения серверу
+            //вот тут будем писать сообщения клиенту
             Thread tWrite = new Thread( () -> {
                 while (true) {
                     String msg = null;
