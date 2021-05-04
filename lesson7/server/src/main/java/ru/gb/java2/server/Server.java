@@ -57,7 +57,7 @@ public class Server {
                 return;
             }
         }
-        sender.sendMessage("Такого пользователя нет!");
+        sender.sendMessage("Такого пользователя нет!\n");
     }
 
     public boolean isNickBusy(String nickname) {

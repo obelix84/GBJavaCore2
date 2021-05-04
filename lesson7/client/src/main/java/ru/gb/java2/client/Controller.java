@@ -30,15 +30,24 @@ public class Controller {
     private DataInputStream in;
     private DataOutputStream out;
     private String username;
+    private Thread dataThread;
+    private boolean listening = true;
 
     public void sendMsg(ActionEvent actionEvent) {
         String msg = msgField.getText() + '\n';
+        //если /exit, сначала отправим серверу, а внизу сделаем дисконнект
         try {
             out.writeUTF(msg);
             msgField.clear();
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Невозможно отправить сообщение", ButtonType.OK);
             alert.showAndWait();
+        }
+        //а вот тут делаем дисконнект
+        if(msg.startsWith("/exit")) {
+
+            listening = false;
+            this.disconnect();
         }
     }
 
@@ -84,7 +93,7 @@ public class Controller {
             socket = new Socket("localhost", 8189);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
-            Thread dataThread = new Thread(() -> {
+            this.dataThread = new Thread(() -> {
                 try {
                     //цикл авторизации
                     while (true) {
@@ -93,6 +102,7 @@ public class Controller {
                         //login_ok Alex
                         if(msg.startsWith("/login_ok ")) {
                             setUsername(msg.split("\\s")[1]);
+                            listening = true;
                             break;
                         }
 
@@ -105,16 +115,17 @@ public class Controller {
 
                     //цикл общения
                     //добавим ВЫХОД
-                    while (true) {
+                    //вот тут  надо убрать работу цикла по /exit
+                    while (listening) {
                         String msg = in.readUTF();
-                        if(msg.startsWith("/exit")) {
-                            this.disconnect();
-                            break;
-                        }
                         msgArea.appendText(msg);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //Я не понял как избавиться от этого эксепшена при закрытии сокета по /exit
+                    //Тогда тупо обработаем и все... Если ошибка не по exit, то тогда просто проигнорируем
+                    if (listening) {
+                        e.printStackTrace();
+                    }
                 } finally {
                     disconnect();
                 }
