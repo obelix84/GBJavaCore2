@@ -1,5 +1,6 @@
 package ru.gb.java2.client;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,11 +44,15 @@ public class Controller {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Невозможно отправить сообщение", ButtonType.OK);
             alert.showAndWait();
         }
-        //а вот тут делаем дисконнект
+        //а вот тут делаем выход
+        //ПОЯСНЕНИЕ
+        //Я не понял как убить поток на клиенте... Получается, сначала закрывается сокет, поток
+        // с чтением сообщений еще живет и кидает exception...
+        // убить поток на клиенте получается только сделав break из цикла чтения сообщений
+        // interrupt, и иже с ним не помогает....
+        // в итоге добавил переменную, цикл чтения закрывается, а потом делаем закрытие ресурсов
         if(msg.startsWith("/exit")) {
-
             listening = false;
-            this.disconnect();
         }
     }
 
@@ -120,12 +125,11 @@ public class Controller {
                         String msg = in.readUTF();
                         msgArea.appendText(msg);
                     }
+                    //если мы получили выход, значит делаем дисконнект
+                    this.disconnect();
+
                 } catch (IOException e) {
-                    //Я не понял как избавиться от этого эксепшена при закрытии сокета по /exit
-                    //Тогда тупо обработаем и все... Если ошибка не по exit, то тогда просто проигнорируем
-                    if (listening) {
                         e.printStackTrace();
-                    }
                 } finally {
                     disconnect();
                 }
