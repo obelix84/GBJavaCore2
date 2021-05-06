@@ -50,7 +50,8 @@ public class Controller {
         // с чтением сообщений еще живет и кидает exception...
         // убить поток на клиенте получается только сделав break из цикла чтения сообщений
         // interrupt, и иже с ним не помогает....
-        // в итоге добавил переменную, цикл чтения закрывается, а потом делаем закрытие ресурсов
+        // в итоге добавил переменную , но она не помогает
+        // в итоге закрываем все коммандой от сервера
         if(msg.startsWith("/exit")) {
             listening = false;
         }
@@ -87,8 +88,11 @@ public class Controller {
             loginPanel.setManaged(true);
             msgPanel.setVisible(false);
             msgPanel.setManaged(false);
+
             //очищаем поле сообщений
-            msgArea.clear();
+            Platform.runLater(() -> {
+                msgArea.clear();
+            });
 
         }
     }
@@ -123,10 +127,13 @@ public class Controller {
                     //вот тут  надо убрать работу цикла по /exit
                     while (listening) {
                         String msg = in.readUTF();
+                        //только коммандой от сервера удается без эксепшенов все это азкрыть
+                        if (msg.startsWith("/exit")) {
+                            this.disconnect();
+                            break;
+                        }
                         msgArea.appendText(msg);
                     }
-                    //если мы получили выход, значит делаем дисконнект
-                    this.disconnect();
 
                 } catch (IOException e) {
                         e.printStackTrace();
