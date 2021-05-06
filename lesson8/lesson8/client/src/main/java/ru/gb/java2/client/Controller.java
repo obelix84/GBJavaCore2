@@ -121,9 +121,8 @@ public class Controller {
                     while (true) {
                         String msg = in.readUTF();
 
-                        //только коммандой от сервера удается без эксепшенов все это азкрыть
+                        //только коммандой от сервера удается без эксепшенов все это закрыть
                         if (msg.startsWith("/exit")) {
-                            this.disconnect();
                             break;
                         }
 

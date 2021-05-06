@@ -35,8 +35,6 @@ public class ClientHandler {
                     if(msg.startsWith("/exit")) {
                         //отправляем сообщение клиенту о выходе
                         server.commandMessage(this,"/exit", this.username);
-                        server.broadcastMessage(this.getUsername() + " вышел из чата...\n");
-                        this.disconnect();
                         break;
                     }
 
@@ -57,6 +55,12 @@ public class ClientHandler {
     //возвращает true когда необходимо сделать break из цикла, например при /exit
     //false означает продолжаем цикл сообщений, true прерываем
     private boolean executeCommand(String cmd) throws IOException {
+
+        if(cmd.startsWith("/exit")) {
+            //отправляем сообщение клиенту о выходе
+            server.commandMessage(this,"/exit", this.username);
+            return true;
+        }
         if(cmd.startsWith("/login ")) {
             String usernameFromLogin = cmd.split("\\s")[1];
 
@@ -112,6 +116,7 @@ public class ClientHandler {
         try {
             out.writeUTF(message);
         } catch (IOException e) {
+            System.out.println("ТУтттта");
             disconnect();
         }
     }
