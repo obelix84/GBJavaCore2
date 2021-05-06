@@ -34,7 +34,6 @@ public class Server {
 
     public void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
-        System.out.println(clientHandler.toString());
         broadcastMessage("Клиент " + clientHandler.getUsername() + " отключился \n");
         broadcastClientList();
     }
