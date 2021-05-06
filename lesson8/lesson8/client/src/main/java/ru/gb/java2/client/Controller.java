@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
@@ -33,9 +34,15 @@ public class Controller {
     private DataOutputStream out;
     private String username;
     private Thread dataThread;
+    private boolean listening = true;
 
     public void sendMsg(ActionEvent actionEvent) {
         String msg = msgField.getText() + '\n';
+
+        if(msg.startsWith("/exit")) {
+            listening = false;
+        }
+
         try {
             out.writeUTF(msg);
             msgField.clear();
@@ -66,6 +73,12 @@ public class Controller {
     }
 
     public void setUsername(String username) {
+        //очищаем поле сообщений
+        Platform.runLater(() -> {
+            msgArea.clear();
+            clientList.getItems().clear();
+        });
+
         this.username = username;
         if(username != null) {
             loginPanel.setVisible(false);
@@ -73,13 +86,6 @@ public class Controller {
             msgPanel.setVisible(true);
             msgPanel.setManaged(true);
         } else {
-            //очищаем поле сообщений
-            Platform.runLater(() -> {
-                msgArea.clear();
-                clientList.getItems().clear();
-            });
-
-
             loginPanel.setVisible(true);
             loginPanel.setManaged(true);
             msgPanel.setVisible(false);
@@ -102,6 +108,7 @@ public class Controller {
                         //login_ok Alex
                         if(msg.startsWith("/login_ok ")) {
                             setUsername(msg.split("\\s")[1]);
+                            listening = true;
                             break;
                         }
 
@@ -117,14 +124,9 @@ public class Controller {
                     //вот тут  надо убрать работу цикла по /exit
                     // вот тут кидает эксепшн при закрытии
                     // цикл ждет ввода, а оказывается, что закрыто все...
-
-                    while (true) {
+                    // я не понимаю как это победить, просто обработать эксепшн?
+                    while (listening) {
                         String msg = in.readUTF();
-
-                        //только коммандой от сервера удается без эксепшенов все это закрыть
-                        if (msg.startsWith("/exit")) {
-                            break;
-                        }
 
                         if(msg.startsWith("/")) {
                             executeCommand(msg);
@@ -134,7 +136,10 @@ public class Controller {
                         msgArea.appendText(msg);
                     }
                 } catch (IOException e) {
+                    //тут кидает EOFexception, если на сервер отправили комманду /exit, надо его обработать
+                    if (listening) {
                         e.printStackTrace();
+                    }
                 } finally {
                     disconnect();
                 }

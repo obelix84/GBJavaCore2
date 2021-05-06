@@ -31,13 +31,6 @@ public class ClientHandler {
                 //цикл общения
                 while (true) {
                     String msg = in.readUTF();
-
-//                    if(msg.startsWith("/exit")) {
-//                        //отправляем сообщение клиенту о выходе
-//                        server.commandMessage(this,"/exit", this.username);
-//                        break;
-//                    }
-
                     if(msg.startsWith("/")) {
                         if (executeCommand(msg)) break;
                         continue;
@@ -57,8 +50,7 @@ public class ClientHandler {
     private boolean executeCommand(String cmd) throws IOException {
 
         if(cmd.startsWith("/exit")) {
-            //отправляем сообщение клиенту о выходе
-            server.commandMessage(this,"/exit", this.username);
+            // выходим из цикла
             return true;
         }
         if(cmd.startsWith("/login ")) {

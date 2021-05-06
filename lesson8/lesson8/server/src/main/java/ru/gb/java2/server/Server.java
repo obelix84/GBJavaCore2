@@ -26,25 +26,25 @@ public class Server {
         }
     }
 
-    public void subscribe(ClientHandler clientHandler) {
+    public synchronized void subscribe(ClientHandler clientHandler) {
         clients.add(clientHandler);
         broadcastMessage("Клиент " + clientHandler.getUsername() + " подлючился \n");
         broadcastClientList();
     }
 
-    public void unsubscribe(ClientHandler clientHandler) {
+    public synchronized void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
         broadcastMessage("Клиент " + clientHandler.getUsername() + " отключился \n");
         broadcastClientList();
     }
 
-    public void broadcastMessage(String message) {
+    public synchronized void broadcastMessage(String message) {
         for (ClientHandler clientHandler : clients) {
             clientHandler.sendMessage(message);
         }
     }
 
-    public void commandMessage(ClientHandler sender, String message, String nick) {
+    public synchronized void commandMessage(ClientHandler sender, String message, String nick) {
         for (ClientHandler client : clients) {
             if (client.getUsername().equals(nick)) {
                 client.sendMessage(message);
@@ -54,7 +54,7 @@ public class Server {
         sender.sendMessage("Такого пользователя нет!");
     }
 
-    public void privateMessage(ClientHandler sender, String message, String nick) {
+    public synchronized void privateMessage(ClientHandler sender, String message, String nick) {
         for (ClientHandler client : clients) {
             sender.sendMessage("Личное сообщение для " + nick + ": " + message);
             if (client.getUsername().equals(nick)) {
@@ -65,7 +65,7 @@ public class Server {
         sender.sendMessage("Такого пользователя нет!\n");
     }
 
-    private void  broadcastClientList() {
+    private synchronized void  broadcastClientList() {
         StringBuilder stringBuilder = new StringBuilder("/clients_list ");
         for (ClientHandler client : clients) {
             stringBuilder.append(client.getUsername()).append(" ");
