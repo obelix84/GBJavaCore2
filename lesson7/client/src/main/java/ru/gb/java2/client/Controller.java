@@ -45,13 +45,7 @@ public class Controller {
             alert.showAndWait();
         }
         //а вот тут делаем выход
-        //ПОЯСНЕНИЕ
-        //Я не понял как убить поток на клиенте... Получается, сначала закрывается сокет, поток
-        // с чтением сообщений еще живет и кидает exception...
-        // убить поток на клиенте получается только сделав break из цикла чтения сообщений
-        // interrupt, и иже с ним не помогает....
-        // в итоге добавил переменную , но она не помогает
-        // в итоге закрываем все коммандой от сервера
+        //можно делать по команде от сервера, но лучше так...
         if(msg.startsWith("/exit")) {
             listening = false;
         }
@@ -78,6 +72,10 @@ public class Controller {
 
     public void setUsername(String username) {
         this.username = username;
+        //очищаем поле сообщений
+        Platform.runLater(() -> {
+            msgArea.clear();
+        });
         if(username != null) {
             loginPanel.setVisible(false);
             loginPanel.setManaged(false);
@@ -88,12 +86,6 @@ public class Controller {
             loginPanel.setManaged(true);
             msgPanel.setVisible(false);
             msgPanel.setManaged(false);
-
-            //очищаем поле сообщений
-            Platform.runLater(() -> {
-                msgArea.clear();
-            });
-
         }
     }
 
@@ -127,11 +119,9 @@ public class Controller {
                     //вот тут  надо убрать работу цикла по /exit
                     while (listening) {
                         String msg = in.readUTF();
-                        //только коммандой от сервера удается без эксепшенов все это азкрыть
-                        if (msg.startsWith("/exit")) {
-                            this.disconnect();
-                            break;
-                        }
+                        //if (msg.startsWith("/exit")) {
+                        //    break;
+                        // }
                         msgArea.appendText(msg);
                     }
 

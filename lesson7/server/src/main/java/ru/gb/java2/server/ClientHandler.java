@@ -55,7 +55,7 @@ public class ClientHandler {
                     }
                     if(msg.startsWith("/exit")) {
                         //отправляем сообщение клиенту о выходе
-                        server.commandMessage(this,"/exit", this.username);
+                        //server.commandMessage(this,"/exit", this.username);
                         server.broadcastMessage(this.getUsername() + " вышел из чата...\n");
                         this.disconnect();
                         break;
