@@ -32,11 +32,11 @@ public class ClientHandler {
                 while (true) {
                     String msg = in.readUTF();
 
-                    if(msg.startsWith("/exit")) {
-                        //отправляем сообщение клиенту о выходе
-                        server.commandMessage(this,"/exit", this.username);
-                        break;
-                    }
+//                    if(msg.startsWith("/exit")) {
+//                        //отправляем сообщение клиенту о выходе
+//                        server.commandMessage(this,"/exit", this.username);
+//                        break;
+//                    }
 
                     if(msg.startsWith("/")) {
                         if (executeCommand(msg)) break;
